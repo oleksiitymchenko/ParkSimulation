@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Park.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,10 @@ namespace ParkSimulation
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(Settings.ParkingSpace);
+            Settings.ParkingSpace = 200;
+            Console.WriteLine(Settings.ParkingSpace);
+            Console.ReadLine();
         }
     }
 }

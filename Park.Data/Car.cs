@@ -10,7 +10,7 @@ namespace Park.Data
     {
     }
     
-    public enum Cartype
+    public enum CarType
     {
         Passenger,
         Truck,
