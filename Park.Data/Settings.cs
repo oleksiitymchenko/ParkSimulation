@@ -15,6 +15,6 @@ namespace Park.Data
 
         public static int ParkingSpace { get; set; } = 100;
 
-        public static double fine { get; set; } = 0.8;
+        public static double Fine { get; set; } = 0.8;
     }
 }
