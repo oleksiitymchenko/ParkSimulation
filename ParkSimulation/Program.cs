@@ -16,7 +16,7 @@ namespace ParkSimulation
             Console.WriteLine(Settings.ParkingSpace);
             Settings.ParkingSpace = 200;
             Console.WriteLine(Settings.ParkingSpace);
-            Console.ReadLine();
+           // Console.ReadLine();
 
             var x = Parking.Instance;
             var i = new Car(20, CarType.Bus);
@@ -24,16 +24,43 @@ namespace ParkSimulation
             x.AddCar(new Car(20, CarType.Truck));
             x.AddCar(new Car(20, CarType.Passenger));
             x.AddCar(new Car(20, CarType.Motorcycle));
-           
+            x.AddCar(new Car(20, CarType.Motorcycle));
 
+
+
+            Console.WriteLine(DateTime.Now.ToString("F"));
             Console.WriteLine("LOL");
-            Console.WriteLine("LOL");
-            Thread.Sleep(10000);
+            Thread.Sleep(1000);
             //  x.RemoveCar(i);
-            foreach (var item in Parking.Instance.Transactions)
-            {
-                Console.WriteLine(item.ToString());
-            }
+            Parking.Instance.ShowTransactions();
+            Thread.Sleep(1000);
+
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Console.WriteLine("===========================");
+            x.RemoveCar(i);
+            Parking.Instance.ShowTransactions();
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Console.WriteLine("===========================");
+            Parking.Instance.ShowTransactions();
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Console.WriteLine("===========================");
+            Parking.Instance.ShowTransactions();
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Console.WriteLine("===========================");
+            Parking.Instance.ShowTransactions();
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Thread.Sleep(1000);
+            Console.WriteLine("===========================");
+            Parking.Instance.ShowTransactions();
             Console.WriteLine("LOL");
             Console.ReadLine();
         }

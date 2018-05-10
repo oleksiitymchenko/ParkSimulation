@@ -5,8 +5,7 @@ namespace Park.Data
 {
     public class Transaction
     {
-        public DateTime CreationTime { get; private set; }
-
+        public readonly DateTime CreationTime = DateTime.Now;
 
         public Guid CarId { get; private set; }
 
@@ -16,13 +15,12 @@ namespace Park.Data
         {
             this.CarId = CarId;
             this.MoneyDrawned = MoneyDrawned;
-            this.CreationTime = DateTime.Now;
+            
         }
 
         public override string ToString()
         {
-            return $"{CreationTime.Date}:{CreationTime.Hour}:" +
-                $"{CreationTime.Minute}:{CreationTime.Second}" +
+            return $"{CreationTime.ToString("G")}"+
                 $" Money operation: {MoneyDrawned} Car id: {CarId}";
         }
     }
