@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkSimulation", "ParkSimulation\ParkSimulation.csproj", "{0A3B85B0-6B88-4365-8EE7-D55B64D441ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Park.Data", "Park.Data\Park.Data.csproj", "{AA237026-DA09-4D21-B631-91D9D0702CFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0A3B85B0-6B88-4365-8EE7-D55B64D441ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A3B85B0-6B88-4365-8EE7-D55B64D441ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A3B85B0-6B88-4365-8EE7-D55B64D441ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA237026-DA09-4D21-B631-91D9D0702CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA237026-DA09-4D21-B631-91D9D0702CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA237026-DA09-4D21-B631-91D9D0702CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA237026-DA09-4D21-B631-91D9D0702CFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
