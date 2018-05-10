@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Park.Data
 {
@@ -10,11 +11,11 @@ namespace Park.Data
     {
         public Guid Id { get; private set; } = Guid.NewGuid();
         
-        public double AccountBalance { get; private set; }
+        public double AccountBalance { get;  set; }
 
         public CarType Type { get; private set; }
 
-        public double Fine { get; set; } = 0;
+        public double Fine { get;  set; } = 0;
 
         public Car(double AccountBalance,
             CarType type)
@@ -23,17 +24,10 @@ namespace Park.Data
             this.Type = type;
         }
 
-        public void Withdraw()
+        public void Deposit(double sum)
         {
-            if (AccountBalance - Settings.ParkingPrices[this.Type] < 0)
-            {
-                Fine = Settings.Fine * Settings.ParkingPrices[this.Type];
-            }
-            else
-            {
-                AccountBalance -= Settings.ParkingPrices[this.Type];
-            }
-            Console.WriteLine($"Withdrawn {AccountBalance}, {Type}, {Fine}");
+            if (sum >= 0)
+            { AccountBalance += sum; }
         }
     }
     

@@ -8,7 +8,7 @@ namespace Park.Data
 {
     public static class Settings
     {
-        public static double Timeout { get; set; } = 0.8; //seconds
+        public static int Timeout { get; set; } = 1; //seconds
 
         public static Dictionary<CarType, int> ParkingPrices { get; set; } = new Dictionary<CarType, int>
         { [CarType.Motorcycle] = 1, [CarType.Bus]=2, [CarType.Passenger] = 3, [CarType.Truck]=4};

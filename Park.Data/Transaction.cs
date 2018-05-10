@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Park.Data
 {
     public class Transaction
     {
         public DateTime CreationTime { get; private set; }
+
 
         public Guid CarId { get; private set; }
 
@@ -15,6 +17,13 @@ namespace Park.Data
             this.CarId = CarId;
             this.MoneyDrawned = MoneyDrawned;
             this.CreationTime = DateTime.Now;
+        }
+
+        public override string ToString()
+        {
+            return $"{CreationTime.Date}:{CreationTime.Hour}:" +
+                $"{CreationTime.Minute}:{CreationTime.Second}" +
+                $" Money operation: {MoneyDrawned} Car id: {CarId}";
         }
     }
 }
