@@ -12,32 +12,33 @@ namespace Park.Data
         public static Parking Instance => Instanse.Value;
 
         private readonly int _timercounter;
-  
+
         private Timer _timerItem;
-      
+
         private Parking()
         {
             TimerCallback timerCallback = TimerWithdraw;
-            _timerItem = new Timer(timerCallback, new TimerPayload(Cars, Transactions, ref _timercounter), 0, Settings.Timeout * 1000);
+            _timerItem = new Timer(timerCallback, new TimerPayload(Cars, Transactions, ref _timercounter), 0,
+                Settings.Timeout * 1000);
         }
 
         public List<Car> Cars { get; } = new List<Car>();
 
         public List<Transaction> Transactions { get; } = new List<Transaction>();
 
-        public double Balance { get; private set; } 
+        public double Balance { get; private set; }
 
         public int FreeSpace { get; private set; } = Settings.ParkingSpace;
 
         public void AddCar(Car car)
         {
-                Cars.Add(car);
-                FreeSpace -= 1;
+            Cars.Add(car);
+            FreeSpace -= 1;
         }
 
         public void RemoveCar(Car car)
         {
-            if (car.Fine == 0.0 || !(car.AccountBalance<=0))
+            if (car.Fine == 0.0 || !(car.AccountBalance <= 0))
             {
                 Cars.Remove(car);
                 FreeSpace += 1;
@@ -48,12 +49,12 @@ namespace Park.Data
             }
         }
 
-        public void Deposit(Car car,double sum)
+        public void Deposit(Car car, double sum)
         {
             if (sum >= 0)
             {
-                car.AccountBalance += sum; 
-                Transactions.Add(new Transaction(car.Id,0+sum));
+                car.AccountBalance += sum;
+                Transactions.Add(new Transaction(car.Id, 0 + sum));
             }
         }
 
@@ -86,11 +87,12 @@ namespace Park.Data
         {
             foreach (Car car in Cars)
             {
-                if (car.Id==id)
+                if (car.Id == id)
                 {
                     return car;
                 }
             }
+
             return null;
         }
 
@@ -124,7 +126,6 @@ namespace Park.Data
             {
                 return "File is not found";
             }
-
         }
 
         private void LogMinuteTransactions(List<Transaction> list)
@@ -134,21 +135,21 @@ namespace Park.Data
             {
                 sum += Math.Abs(trans.MoneyDrawned);
             }
-           
-                using (StreamWriter sw = new StreamWriter(Settings.LogPath,true))
-                {
-                    sw.WriteLine($"Date: {DateTime.Now.ToString("u")}; Earned money: {sum}");
-                }   
+
+            using (StreamWriter sw = new StreamWriter(Settings.LogPath, true))
+            {
+                sw.WriteLine($"Date: {DateTime.Now.ToString("u")}; Earned money: {sum}");
+            }
         }
 
         private void TimerWithdraw(object payload)
         {
-            TimerPayload data = (TimerPayload)payload;
+            TimerPayload data = (TimerPayload) payload;
             WithdrawFromCar(data.CarReferences, data.TransactionReferences);
-          
-            for(int i =0; i<data.TransactionReferences.Count;i++)
+
+            for (int i = 0; i < data.TransactionReferences.Count; i++)
             {
-                if (data.TransactionReferences[i].CreationTime.CompareTo(DateTime.Now.AddMinutes(-2))<=0)
+                if (data.TransactionReferences[i].CreationTime.CompareTo(DateTime.Now.AddMinutes(-2)) <= 0)
                 {
                     data.TransactionReferences.Remove(data.TransactionReferences[i]);
                 }
@@ -167,6 +168,7 @@ namespace Park.Data
             internal List<Car> CarReferences;
             internal List<Transaction> TransactionReferences;
             internal int Counter;
+
             public TimerPayload(List<Car> car,
                 List<Transaction> transactions,
                 ref int counter)
@@ -175,7 +177,6 @@ namespace Park.Data
                 TransactionReferences = transactions;
                 Counter = counter;
             }
-            
         }
     }
 }

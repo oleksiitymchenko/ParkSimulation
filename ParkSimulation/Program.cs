@@ -68,7 +68,7 @@ namespace ParkSimulation
                         Parking.Instance.AddCar(new Car(balance, type));
                         Console.ReadKey();
                         break;
-                        }
+                    }
                     case "2":
                     {
                         if (Parking.Instance.Cars.Count == 0)
@@ -77,7 +77,8 @@ namespace ParkSimulation
                             Console.ReadLine();
                             break;
                         }
-                            Console.WriteLine("Already staying cars");
+
+                        Console.WriteLine("Already staying cars");
                         ShowStayCars(Parking.Instance.Cars);
                         Console.WriteLine("----------------------------------");
                         Console.WriteLine("Choose car to remove");
@@ -100,7 +101,7 @@ namespace ParkSimulation
                             Car removedCar = Parking.Instance.Cars[index];
                             Parking.Instance.RemoveCar(removedCar);
                         }
-                       
+
                         catch (ArgumentOutOfRangeException)
                         {
                             Console.WriteLine("Index is out of range");
@@ -112,7 +113,7 @@ namespace ParkSimulation
 
                         Console.ReadKey();
                         break;
-                        }
+                    }
                     case "3":
                     {
                         if (Parking.Instance.Cars.Count == 0)
@@ -121,9 +122,10 @@ namespace ParkSimulation
                             Console.ReadLine();
                             break;
                         }
-                            Console.WriteLine("Already staying cars");
+
+                        Console.WriteLine("Already staying cars");
                         ShowStayCars(Parking.Instance.Cars);
-                        
+
 
                         Console.WriteLine("----------------------------------");
                         Console.WriteLine("Choose car to add money on account");
@@ -164,25 +166,25 @@ namespace ParkSimulation
                         }
                         catch (ArgumentOutOfRangeException)
                         {
-                            Console.WriteLine("Index is out of range");
+                            Console.WriteLine("Index is incorrect");
                         }
 
                         break;
-                        }
+                    }
                     case "4":
                     {
                         Console.WriteLine("There are some free space on parking");
                         Console.WriteLine($"{Parking.Instance.FreeSpace} free spots.");
                         Console.ReadKey();
                         break;
-                        }
+                    }
                     case "5":
                     {
                         Console.WriteLine("Parking is making money");
                         Console.WriteLine($"Current sum is {Parking.Instance.Balance}");
                         Console.ReadKey();
                         break;
-                        }
+                    }
                     case "6":
                     {
                         Console.WriteLine("Transactions in past minute:");
@@ -205,7 +207,6 @@ namespace ParkSimulation
                         break;
                     }
                 }
-
             }
         }
 
