@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using System.Timers;
 
 namespace Park.Data
 {
@@ -25,7 +19,10 @@ namespace Park.Data
             this.Type = type;
         }
 
-        
+        public override string ToString()
+        {
+            return $"Car type: {Type}, Account balance: {AccountBalance}, Fine: {Fine}, Id: {Id}";
+        }
     }
     
     public enum CarType

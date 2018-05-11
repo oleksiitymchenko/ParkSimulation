@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Collections.Concurrent;
 using System.IO;
-using System.Xml.Serialization;
+using System.Text;
 
 namespace Park.Data
 {
@@ -26,21 +25,26 @@ namespace Park.Data
 
 
         private List<Car> _cars = new List<Car>();
+
+        public List<Car> Cars
+        {
+            get { return _cars; }
+            set { _cars = value; }
+        }
         private List<Transaction> _transactions = new List<Transaction>();
         public List<Transaction> Transactions => _transactions;
 
         public double Balance { get; private set; }
         public int FreeSpace { get; private set; } = Settings.ParkingSpace;
        
+        //public void ShowAllTransactions()
+        //{
 
-        public void ShowAllTransactions()
-        {
-
-            for (int i = 0; i < Transactions.Count; i++)
-            {
-                Console.WriteLine(Transactions[i].ToString());
-            }
-        }
+        //    for (int i = 0; i < Transactions.Count; i++)
+        //    {
+        //        Console.WriteLine(Transactions[i].ToString());
+        //    }
+        //}
 
         public List<Transaction> OneMinuteTransactions
         {   
@@ -58,7 +62,6 @@ namespace Park.Data
                 return transList;
             }
         }
-
 
         public void AddCar(Car car)
         {
@@ -78,6 +81,7 @@ namespace Park.Data
                 throw new Exception("Fine is imposed on your car. Put money on car`s account");
             }
         }
+
         public void Deposit(Car car,double sum)
         {
             if (sum >= 0)
@@ -85,6 +89,22 @@ namespace Park.Data
                 car.AccountBalance += sum; 
                 Transactions.Add(new Transaction(car.Id,0+sum));
             }
+        }
+
+        public string ShowTransactionLog()
+        {
+            try
+            {
+                using (StreamReader sw = new StreamReader(Settings.LogPath, true))
+                {
+                    return sw.ReadToEnd();
+                }
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                return "File is not found";
+            }
+
         }
 
         public void WithdrawFromCar(List<Car> list, List<Transaction> transactionList)
@@ -112,9 +132,7 @@ namespace Park.Data
             }
         }
 
-       
-
-        public Car GetCarById(Guid id)
+        internal Car GetCarById(Guid id)
         {
             foreach (Car car in _cars)
             {
@@ -153,7 +171,8 @@ namespace Park.Data
                 data.counter = 0;
             }
         }
-        private class Kostil
+
+        private sealed class Kostil
         {
             internal List<Car> CarReferences;
             internal List<Transaction> TransactionReferences;
