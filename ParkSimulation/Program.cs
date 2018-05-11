@@ -51,9 +51,12 @@ namespace ParkSimulation
                 }
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine(Parking.Instance.Balance);
-               
 
-            
+
+            Thread.Sleep(60500);
+            Console.WriteLine("===========================");
+            Parking.Instance.ShowAllTransactions();
+            Console.WriteLine("******************************************");
 
             Console.WriteLine("LOL");
             Console.ReadLine();

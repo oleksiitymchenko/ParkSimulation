@@ -11,6 +11,8 @@ namespace Park.Data
     {
         public static int Timeout { get; set; } = 5; //seconds
 
+        public static string LogPath { get; set; } = "Transactions.log";
+
         public static ConcurrentDictionary<CarType, int> ParkingPrices { get; set; } = new ConcurrentDictionary<CarType, int>
         { [CarType.Motorcycle] = 1, [CarType.Bus]=2, [CarType.Passenger] = 3, [CarType.Truck]=4};
 

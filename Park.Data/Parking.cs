@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Park.Data
 {
@@ -11,6 +13,7 @@ namespace Park.Data
 
         public static Parking Instance => Instanse.Value;
 
+        private int timercounter;
         private TimerCallback _timerCallback;
         private Timer _timerItem;
       
@@ -18,7 +21,7 @@ namespace Park.Data
         private Parking()
         {
             _timerCallback = TimerWithdraw;
-            _timerItem = new Timer(_timerCallback, new Kostil(_cars, _transactions), 0, Settings.Timeout * 1000);
+            _timerItem = new Timer(_timerCallback, new Kostil(_cars, _transactions,ref timercounter), 0, Settings.Timeout * 1000);
         }
 
 
@@ -75,7 +78,14 @@ namespace Park.Data
                 throw new Exception("Fine is imposed on your car. Put money on car`s account");
             }
         }
-
+        public void Deposit(Car car,double sum)
+        {
+            if (sum >= 0)
+            {
+                car.AccountBalance += sum; 
+                Transactions.Add(new Transaction(car.Id,0+sum));
+            }
+        }
 
         public void WithdrawFromCar(List<Car> list, List<Transaction> transactionList)
         {
@@ -115,22 +125,46 @@ namespace Park.Data
             }
             return null;
         }
+
+        private void LogMinuteTransactions(List<Transaction> list)
+        {
+            double sum = 0;
+            foreach (Transaction trans in list)
+            {
+                sum += Math.Abs(trans.MoneyDrawned);
+            }
+           
+                using (StreamWriter sw = new StreamWriter(Settings.LogPath,true))
+                {
+                    sw.WriteLine($"Date: {DateTime.Today.ToString("d")}; Earned money: {sum}");
+                }
+
+            
+        }
+
         private void TimerWithdraw(object kostil)
         {
             Kostil data = (Kostil)kostil;
             WithdrawFromCar(data.CarReferences, data.TransactionReferences);
-     
+            ++data.counter;
+            if (data.counter * Settings.Timeout * 1000 >= 60000)
+            {
+                LogMinuteTransactions(OneMinuteTransactions);
+                data.counter = 0;
+            }
         }
         private class Kostil
         {
             internal List<Car> CarReferences;
             internal List<Transaction> TransactionReferences;
-
+            internal int counter;
             public Kostil(List<Car> car,
-                List<Transaction> transactions)
+                List<Transaction> transactions,
+                ref int counter)
             {
                 CarReferences = car;
                 TransactionReferences = transactions;
+                this.counter = counter;
             }
             
         }

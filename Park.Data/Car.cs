@@ -25,11 +25,7 @@ namespace Park.Data
             this.Type = type;
         }
 
-        public void Deposit(double sum)
-        {
-            if (sum >= 0)
-            { AccountBalance += sum; }
-        }
+        
     }
     
     public enum CarType
