@@ -137,7 +137,7 @@ namespace Park.Data
            
                 using (StreamWriter sw = new StreamWriter(Settings.LogPath,true))
                 {
-                    sw.WriteLine($"Date: {DateTime.Today.ToString("d")}; Earned money: {sum}");
+                    sw.WriteLine($"Date: {DateTime.Now.ToString("u")}; Earned money: {sum}");
                 }   
         }
 

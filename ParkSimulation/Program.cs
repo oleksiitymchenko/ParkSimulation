@@ -8,39 +8,40 @@ namespace ParkSimulation
     {
         static void Main(string[] args)
         {
-          Start:
-            Console.Clear();
-            Console.WriteLine("[1] Add car");
-            Console.WriteLine("[2] Remove car");
-            Console.WriteLine("[3] Put money on car`s account");
-            Console.WriteLine("[4] Show free space on parking");
-            Console.WriteLine("[5] Show parking benefits");
-            Console.WriteLine("[6] Show 1 minute transaction history");
-            Console.WriteLine("[7] Show Transaction.log");
-            switch (Console.ReadLine())
+            while (true)
             {
-                case "1":
+                Console.Clear();
+                Console.WriteLine("[1] Add car");
+                Console.WriteLine("[2] Remove car");
+                Console.WriteLine("[3] Put money on car`s account");
+                Console.WriteLine("[4] Show free space on parking");
+                Console.WriteLine("[5] Show parking benefits");
+                Console.WriteLine("[6] Show 1 minute transaction history");
+                Console.WriteLine("[7] Show Transaction.log");
+                switch (Console.ReadLine())
                 {
-                    Console.WriteLine("Already staying cars");
-                    ShowStayCars(Parking.Instance.Cars);
-                    Console.WriteLine("----------------------------------");
-                        Console.WriteLine("Creating cars");
-                    double balance;
-                        while (true)
+                    case "1":
                     {
-                        Console.WriteLine("Input account balance");
-
-                        
-                        bool n = double.TryParse(Console.ReadLine(), out balance);
-                        if (!n)
+                        Console.WriteLine("Already staying cars");
+                        ShowStayCars(Parking.Instance.Cars);
+                        Console.WriteLine("----------------------------------");
+                        Console.WriteLine("Creating cars");
+                        double balance;
+                        while (true)
                         {
-                            Console.WriteLine("Input correct number");
-                        }
-                        else break;
-                    }
+                            Console.WriteLine("Input account balance");
 
-                    CarType type;
-                    
+
+                            bool n = double.TryParse(Console.ReadLine(), out balance);
+                            if (!n)
+                            {
+                                Console.WriteLine("Input correct number");
+                            }
+                            else break;
+                        }
+
+                        CarType type;
+
                         Console.WriteLine("Choose car type 1-Bus, 2-Motorcycle, 3- Passenger, 4-Truck");
 
                         switch (Console.ReadLine())
@@ -63,139 +64,148 @@ namespace ParkSimulation
                                 type = CarType.Passenger;
                                 break;
                         }
-                    Parking.Instance.AddCar(new Car(balance,type));
-                    Console.ReadLine();
-                    goto Start;
-                }
-                case "2":
-                {
-                    Console.WriteLine("Already staying cars");
-                    ShowStayCars(Parking.Instance.Cars);
-                    Console.WriteLine("----------------------------------");
+
+                        Parking.Instance.AddCar(new Car(balance, type));
+                        Console.ReadKey();
+                        break;
+                        }
+                    case "2":
+                    {
+                        if (Parking.Instance.Cars.Count == 0)
+                        {
+                            Console.WriteLine("There are no cars");
+                            Console.ReadLine();
+                            break;
+                        }
+                            Console.WriteLine("Already staying cars");
+                        ShowStayCars(Parking.Instance.Cars);
+                        Console.WriteLine("----------------------------------");
                         Console.WriteLine("Choose car to remove");
-                    int index;
-                    while (true)
-                    {
-                        Console.WriteLine("Input number of car");
-
-
-                        bool n = int.TryParse(Console.ReadLine(), out index);
-                        if (!n)
+                        int index;
+                        while (true)
                         {
-                            Console.WriteLine("Input correct number");
+                            Console.WriteLine("Input number of car");
+
+
+                            bool n = int.TryParse(Console.ReadLine(), out index);
+                            if (!n)
+                            {
+                                Console.WriteLine("Input correct number");
+                            }
+                            else break;
                         }
-                        else break;
-                    }
-
-                    try
-                    {
-                        Car removedCar = Parking.Instance.Cars[index];
-                        Parking.Instance.RemoveCar(removedCar);
-                    }
-                    //catch (IndexOutOfRangeException)
-                    //{
-                    //    Console.WriteLine("Index is out of range");
-                    //}
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        Console.WriteLine("Index is out of range");
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Put money on car`s account");
-                    }
-
-                        Console.ReadLine();
-                        goto Start;
-                    }
-                case "3":
-                {
-                    Console.WriteLine("Already staying cars");
-                    ShowStayCars(Parking.Instance.Cars);
-                    if (Parking.Instance.Cars.Count==0)
-                    {
-                        Console.WriteLine("There are no cars");
-                        Console.ReadLine();
-                        goto Start;
-                    }
-                    Console.WriteLine("----------------------------------");
-                    Console.WriteLine("Choose car to add money on account");
-                    int index;
-                    while (true)
-                    {
-                        Console.WriteLine("Input number of car");
-                        bool n = int.TryParse(Console.ReadLine(), out index);
-                        if (!n || index>=Parking.Instance.Cars.Count)
-                        {
-                            Console.WriteLine("Input correct number");
-                        }
-                        else break;
-                    }
-
-                    double sum=0;
-                    while (true)
-                    {
-                        Console.WriteLine("Input amount of money");
-
-
-                        bool n = double.TryParse(Console.ReadLine(), out sum);
-                        if (!n )
-                        {
-                            Console.WriteLine("Input correct number");
-                        }
-                        else break;
-                    }
 
                         try
+                        {
+                            Car removedCar = Parking.Instance.Cars[index];
+                            Parking.Instance.RemoveCar(removedCar);
+                        }
+                       
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            Console.WriteLine("Index is out of range");
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Put money on car`s account");
+                        }
+
+                        Console.ReadKey();
+                        break;
+                        }
+                    case "3":
                     {
-                        Car AddingMoneyToCar = Parking.Instance.Cars[index];
-                        Parking.Instance.Deposit(AddingMoneyToCar,sum);
-                    }
-                    catch (IndexOutOfRangeException)
+                        if (Parking.Instance.Cars.Count == 0)
+                        {
+                            Console.WriteLine("There are no cars");
+                            Console.ReadLine();
+                            break;
+                        }
+                            Console.WriteLine("Already staying cars");
+                        ShowStayCars(Parking.Instance.Cars);
+                        
+
+                        Console.WriteLine("----------------------------------");
+                        Console.WriteLine("Choose car to add money on account");
+                        int index;
+                        while (true)
+                        {
+                            Console.WriteLine("Input number of car");
+                            bool n = int.TryParse(Console.ReadLine(), out index);
+                            if (!n || index >= Parking.Instance.Cars.Count)
+                            {
+                                Console.WriteLine("Input correct number");
+                            }
+                            else break;
+                        }
+
+                        double sum = 0;
+                        while (true)
+                        {
+                            Console.WriteLine("Input amount of money");
+
+
+                            bool n = double.TryParse(Console.ReadLine(), out sum);
+                            if (!n)
+                            {
+                                Console.WriteLine("Input correct number");
+                            }
+                            else break;
+                        }
+
+                        try
+                        {
+                            Car carForPutMoney = Parking.Instance.Cars[index];
+                            Parking.Instance.Deposit(carForPutMoney, sum);
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            Console.WriteLine("Index is out of range");
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            Console.WriteLine("Index is out of range");
+                        }
+
+                        break;
+                        }
+                    case "4":
                     {
-                        Console.WriteLine("Index is out of range");
-                    }
-                    catch (ArgumentOutOfRangeException)
+                        Console.WriteLine("There are some free space on parking");
+                        Console.WriteLine($"{Parking.Instance.FreeSpace} free spots.");
+                        Console.ReadKey();
+                        break;
+                        }
+                    case "5":
                     {
-                        Console.WriteLine("Index is out of range");
-                    }
-                        goto Start;
-                }
-                case "4":
-                {
-                    Console.WriteLine("There are some free space on parking");
-                    Console.WriteLine($"{Parking.Instance.FreeSpace} free spots.");
-                    Console.ReadLine();
-                    goto Start;
-                }
-                case "5":
-                {
-                    Console.WriteLine("Parking is making money");
-                    Console.WriteLine($"Current sum is {Parking.Instance.Balance}");
-                    Console.ReadLine();
-                    goto Start;
-                }
-                case "6":
-                {
-                    Console.WriteLine("Transactions in past minute:");
-                    Console.WriteLine();
-                    foreach (var trans in Parking.Instance.TransactionsOneMinute)
+                        Console.WriteLine("Parking is making money");
+                        Console.WriteLine($"Current sum is {Parking.Instance.Balance}");
+                        Console.ReadKey();
+                        break;
+                        }
+                    case "6":
                     {
-                        Console.WriteLine(trans);
+                        Console.WriteLine("Transactions in past minute:");
+                        Console.WriteLine();
+                        foreach (var trans in Parking.Instance.TransactionsOneMinute)
+                        {
+                            Console.WriteLine(trans);
+                        }
+
+                        Console.WriteLine();
+                        Console.ReadKey();
+                        break;
                     }
-                    Console.WriteLine();
-                    Console.ReadLine();
-                    goto Start;
+                    case "7":
+                    {
+                        Console.WriteLine("Transactions.log file");
+                        Console.WriteLine();
+                        Console.WriteLine(Parking.Instance.TransactionsLogged());
+                        Console.ReadKey();
+                        break;
+                    }
                 }
-                case "7":
-                {
-                    Console.WriteLine("Transactions.log file");
-                    Console.WriteLine();
-                    Console.WriteLine(Parking.Instance.TransactionsLogged());
-                    Console.ReadLine();
-                    goto Start;
-                }
-                default: goto Start;
+
             }
         }
 
@@ -204,7 +214,7 @@ namespace ParkSimulation
             int a = 0;
             foreach (var car in cars)
             {
-                Console.WriteLine($"[{a}]. {car}");
+                Console.WriteLine($"[{a}] {car}");
                 a++;
             }
         }
