@@ -23,7 +23,7 @@ namespace Park.Data
 
         public List<Car> Cars { get; } = new List<Car>();
 
-        private List<Transaction> Transactions { get; } = new List<Transaction>();
+        public List<Transaction> Transactions { get; } = new List<Transaction>();
 
         public double Balance { get; private set; } 
 
@@ -141,10 +141,19 @@ namespace Park.Data
                 }   
         }
 
-        private void TimerWithdraw(object kostil)
+        private void TimerWithdraw(object payload)
         {
-            TimerPayload data = (TimerPayload)kostil;
+            TimerPayload data = (TimerPayload)payload;
             WithdrawFromCar(data.CarReferences, data.TransactionReferences);
+          
+            for(int i =0; i<data.TransactionReferences.Count;i++)
+            {
+                if (data.TransactionReferences[i].CreationTime.CompareTo(DateTime.Now.AddMinutes(-2))<=0)
+                {
+                    data.TransactionReferences.Remove(data.TransactionReferences[i]);
+                }
+            }
+
             ++data.Counter;
             if (data.Counter * Settings.Timeout * 1000 >= 60000)
             {
