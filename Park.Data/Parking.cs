@@ -1,44 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Linq;
-using System.Text;
+using System.Collections.Concurrent;
+
 namespace Park.Data
 {
     public class Parking
     {
-        private static readonly Lazy<Parking> _instanse = new Lazy<Parking>(() => new Parking());
-        
+        private static readonly Lazy<Parking> Instanse = new Lazy<Parking>(() => new Parking());
 
-        public static Parking Instance => _instanse.Value;
+        public static Parking Instance => Instanse.Value;
 
-        private Parking() {
-            TimerDelegate = new TimerCallback(TimerWithdraw);
-            TimerItem = new Timer(TimerDelegate, new Kostil(_cars, _transactions), 0, Settings.Timeout * 1000);
+        private TimerCallback _timerCallback;
+        private Timer _timerItem;
+      
+
+        private Parking()
+        {
+            _timerCallback = TimerWithdraw;
+            _timerItem = new Timer(_timerCallback, new Kostil(_cars, _transactions), 0, Settings.Timeout * 1000);
         }
 
 
-        private  List<Car> _cars = new List<Car>();
-        private  List<Transaction> _transactions = new List<Transaction>();
-        public  List<Car> Cars => _cars;
+        private List<Car> _cars = new List<Car>();
+        private List<Transaction> _transactions = new List<Transaction>();
         public List<Transaction> Transactions => _transactions;
+
         public double Balance { get; private set; }
-        private TimerCallback TimerDelegate;
-        private Timer TimerItem;
-      
-        public void ShowTransactions()
+        public int FreeSpace { get; private set; } = Settings.ParkingSpace;
+       
+
+        public void ShowAllTransactions()
         {
-            Transaction[] list = new Transaction[Transactions.Count];
-            Transactions.CopyTo(list);
-            foreach (var item in list)
+
+            for (int i = 0; i < Transactions.Count; i++)
             {
-                Console.WriteLine(item.ToString());
+                Console.WriteLine(Transactions[i].ToString());
             }
         }
 
+        public List<Transaction> OneMinuteTransactions
+        {   
+            get
+            {
+                var transList = new List<Transaction>();
+                for (int i = 0; i < Transactions.Count; i++)
+                {
+                    if (Transactions[i].CreationTime.CompareTo(DateTime.Now.AddMinutes(-1))>=0)
+                    {
+                        transList.Add(Transactions[i]);
+                    }
+                }
+
+                return transList;
+            }
+        }
+
+
         public void AddCar(Car car)
         {
-            _cars.Add(car);
+                _cars.Add(car);
+                 FreeSpace -= 1;
         }
 
         public void RemoveCar(Car car)
@@ -46,8 +68,7 @@ namespace Park.Data
             if (car.Fine == 0)
             {
                 _cars.Remove(car);
-                TimerItem.Dispose();
-                TimerItem = new Timer(TimerDelegate, new Kostil(_cars, _transactions), 0, Settings.Timeout * 1000);
+                FreeSpace += 1;
             }
             else
             {
@@ -55,9 +76,8 @@ namespace Park.Data
             }
         }
 
-        
 
-        public void WithdrawFromCar( List<Car> list, List<Transaction> TransactionList)
+        public void WithdrawFromCar(List<Car> list, List<Transaction> transactionList)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -67,42 +87,52 @@ namespace Park.Data
                     {
                         list[i].Fine = Settings.Fine * Settings.ParkingPrices[list[i].Type];
                         var trans = new Transaction(list[i].Id, 0 - list[i].Fine);
-                        TransactionList.Add(trans);
-                        // Console.WriteLine($"Fine{car.Fine} , {car.Type}, {car.AccountBalance}");
-                        // Console.WriteLine(trans);
+                        Balance += Math.Abs(trans.MoneyDrawned);
+                        transactionList.Add(trans);
                     }
+                    else return;
                 }
                 else
                 {
                     list[i].AccountBalance -= Settings.ParkingPrices[list[i].Type];
                     var trans = new Transaction(list[i].Id, 0 - Settings.ParkingPrices[list[i].Type]);
-                    TransactionList.Add(trans);
-                    // Console.WriteLine($"Withdrawn {car.AccountBalance}, {car.Type}, {car.Fine}");
-                    // Console.WriteLine(trans);
+                    Balance += Math.Abs(trans.MoneyDrawned);
+                    transactionList.Add(trans);
                 }
             }
-            
-          
         }
 
-        private  void TimerWithdraw(object kostil)
+       
+
+        public Car GetCarById(Guid id)
+        {
+            foreach (Car car in _cars)
+            {
+                if (car.Id==id)
+                {
+                    return car;
+                }
+            }
+            return null;
+        }
+        private void TimerWithdraw(object kostil)
         {
             Kostil data = (Kostil)kostil;
             WithdrawFromCar(data.CarReferences, data.TransactionReferences);
+     
         }
-
-        
-       private class Kostil
+        private class Kostil
         {
-            public List<Car> CarReferences;
-            public List<Transaction> TransactionReferences;
+            internal List<Car> CarReferences;
+            internal List<Transaction> TransactionReferences;
 
-            public Kostil( List<Car> car, 
-                 List<Transaction> transactions)
+            public Kostil(List<Car> car,
+                List<Transaction> transactions)
             {
                 CarReferences = car;
                 TransactionReferences = transactions;
             }
+            
         }
     }
 }

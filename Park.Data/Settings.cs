@@ -9,7 +9,7 @@ namespace Park.Data
 {
     public static class Settings
     {
-        public static int Timeout { get; set; } = 3; //seconds
+        public static int Timeout { get; set; } = 5; //seconds
 
         public static ConcurrentDictionary<CarType, int> ParkingPrices { get; set; } = new ConcurrentDictionary<CarType, int>
         { [CarType.Motorcycle] = 1, [CarType.Bus]=2, [CarType.Passenger] = 3, [CarType.Truck]=4};
