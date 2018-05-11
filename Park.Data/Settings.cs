@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 
 namespace Park.Data
 {
     public static class Settings
     {
-        public static int Timeout { get; set; } = 5; //seconds
+        public static int Timeout { get; set; } = 3; //seconds
 
         public static string LogPath { get; set; } = "Transactions.log";
 

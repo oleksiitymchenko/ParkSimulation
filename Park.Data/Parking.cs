@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
-using System.Text;
 
 namespace Park.Data
 {
@@ -12,68 +11,35 @@ namespace Park.Data
 
         public static Parking Instance => Instanse.Value;
 
-        private int timercounter;
-        private TimerCallback _timerCallback;
+        private readonly int _timercounter;
+  
         private Timer _timerItem;
       
-
         private Parking()
         {
-            _timerCallback = TimerWithdraw;
-            _timerItem = new Timer(_timerCallback, new Kostil(_cars, _transactions,ref timercounter), 0, Settings.Timeout * 1000);
+            TimerCallback timerCallback = TimerWithdraw;
+            _timerItem = new Timer(timerCallback, new TimerPayload(Cars, Transactions, ref _timercounter), 0, Settings.Timeout * 1000);
         }
 
+        public List<Car> Cars { get; } = new List<Car>();
 
-        private List<Car> _cars = new List<Car>();
+        private List<Transaction> Transactions { get; } = new List<Transaction>();
 
-        public List<Car> Cars
-        {
-            get { return _cars; }
-            set { _cars = value; }
-        }
-        private List<Transaction> _transactions = new List<Transaction>();
-        public List<Transaction> Transactions => _transactions;
+        public double Balance { get; private set; } 
 
-        public double Balance { get; private set; }
         public int FreeSpace { get; private set; } = Settings.ParkingSpace;
-       
-        //public void ShowAllTransactions()
-        //{
-
-        //    for (int i = 0; i < Transactions.Count; i++)
-        //    {
-        //        Console.WriteLine(Transactions[i].ToString());
-        //    }
-        //}
-
-        public List<Transaction> OneMinuteTransactions
-        {   
-            get
-            {
-                var transList = new List<Transaction>();
-                for (int i = 0; i < Transactions.Count; i++)
-                {
-                    if (Transactions[i].CreationTime.CompareTo(DateTime.Now.AddMinutes(-1))>=0)
-                    {
-                        transList.Add(Transactions[i]);
-                    }
-                }
-
-                return transList;
-            }
-        }
 
         public void AddCar(Car car)
         {
-                _cars.Add(car);
-                 FreeSpace -= 1;
+                Cars.Add(car);
+                FreeSpace -= 1;
         }
 
         public void RemoveCar(Car car)
         {
-            if (car.Fine == 0 || !(car.AccountBalance<=0))
+            if (car.Fine == 0.0 || !(car.AccountBalance<=0))
             {
-                _cars.Remove(car);
+                Cars.Remove(car);
                 FreeSpace += 1;
             }
             else
@@ -91,29 +57,13 @@ namespace Park.Data
             }
         }
 
-        public string ShowTransactionLog()
-        {
-            try
-            {
-                using (StreamReader sw = new StreamReader(Settings.LogPath, true))
-                {
-                    return sw.ReadToEnd();
-                }
-            }
-            catch (System.IO.FileNotFoundException)
-            {
-                return "File is not found";
-            }
-
-        }
-
-        public void WithdrawFromCar(List<Car> list, List<Transaction> transactionList)
+        private void WithdrawFromCar(List<Car> list, List<Transaction> transactionList)
         {
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].AccountBalance - Settings.ParkingPrices[list[i].Type] < 0)
                 {
-                    if (list[i].Fine == 0)
+                    if (list[i].Fine == 0.0)
                     {
                         list[i].Fine = Settings.Fine * Settings.ParkingPrices[list[i].Type];
                         var trans = new Transaction(list[i].Id, 0 - list[i].Fine);
@@ -132,9 +82,9 @@ namespace Park.Data
             }
         }
 
-        internal Car GetCarById(Guid id)
+        public Car GetCarById(Guid id)
         {
-            foreach (Car car in _cars)
+            foreach (Car car in Cars)
             {
                 if (car.Id==id)
                 {
@@ -142,6 +92,39 @@ namespace Park.Data
                 }
             }
             return null;
+        }
+
+        public List<Transaction> TransactionsOneMinute
+        {
+            get
+            {
+                var transList = new List<Transaction>();
+                for (int i = 0; i < Transactions.Count; i++)
+                {
+                    if (Transactions[i].CreationTime.CompareTo(DateTime.Now.AddMinutes(-1)) >= 0)
+                    {
+                        transList.Add(Transactions[i]);
+                    }
+                }
+
+                return transList;
+            }
+        }
+
+        public string TransactionsLogged()
+        {
+            try
+            {
+                using (StreamReader sw = new StreamReader(Settings.LogPath, true))
+                {
+                    return sw.ReadToEnd();
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                return "File is not found";
+            }
+
         }
 
         private void LogMinuteTransactions(List<Transaction> list)
@@ -155,35 +138,33 @@ namespace Park.Data
                 using (StreamWriter sw = new StreamWriter(Settings.LogPath,true))
                 {
                     sw.WriteLine($"Date: {DateTime.Today.ToString("d")}; Earned money: {sum}");
-                }
-
-            
+                }   
         }
 
         private void TimerWithdraw(object kostil)
         {
-            Kostil data = (Kostil)kostil;
+            TimerPayload data = (TimerPayload)kostil;
             WithdrawFromCar(data.CarReferences, data.TransactionReferences);
-            ++data.counter;
-            if (data.counter * Settings.Timeout * 1000 >= 60000)
+            ++data.Counter;
+            if (data.Counter * Settings.Timeout * 1000 >= 60000)
             {
-                LogMinuteTransactions(OneMinuteTransactions);
-                data.counter = 0;
+                LogMinuteTransactions(TransactionsOneMinute);
+                data.Counter = 0;
             }
         }
 
-        private sealed class Kostil
+        private sealed class TimerPayload
         {
             internal List<Car> CarReferences;
             internal List<Transaction> TransactionReferences;
-            internal int counter;
-            public Kostil(List<Car> car,
+            internal int Counter;
+            public TimerPayload(List<Car> car,
                 List<Transaction> transactions,
                 ref int counter)
             {
                 CarReferences = car;
                 TransactionReferences = transactions;
-                this.counter = counter;
+                Counter = counter;
             }
             
         }
