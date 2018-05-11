@@ -1,16 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Park.Data
 {
-    class Car
+    public class Car
     {
+        public Guid Id { get; } = Guid.NewGuid();
+
+        public double AccountBalance { get; set; }
+
+        public CarType Type { get; }
+
+        public double Fine { get; set; } = 0;
+
+        public Car(double accountBalance,
+            CarType type)
+        {
+            AccountBalance = accountBalance;
+            Type = type;
+        }
+
+        public override string ToString()
+        {
+            return $"Car type: {Type}, Account balance: {AccountBalance}, Fine: {Fine}, Id: {Id}";
+        }
     }
-    
-    public enum Cartype
+
+    public enum CarType
     {
         Passenger,
         Truck,
