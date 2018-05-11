@@ -21,12 +21,12 @@ namespace Park.Data
             try
             {
                 return $"{CreationTime.ToString("G")}" +
-                       $" Money operation: {MoneyDrawned} Car id: {Parking.Instance.GetCarById(CarId).Type}";
+                       $" Operation: {MoneyDrawned} Car id: {Parking.Instance.GetCarById(CarId).Type}";
             }
             catch (NullReferenceException)
             {
                 return $"{CreationTime.ToString("G")}" +
-                       $" Money operation: {MoneyDrawned}";
+                       $" Operation: {MoneyDrawned}";
             }
         }
     }

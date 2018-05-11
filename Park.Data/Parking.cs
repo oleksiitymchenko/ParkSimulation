@@ -71,14 +71,14 @@ namespace Park.Data
 
         public void RemoveCar(Car car)
         {
-            if (car.Fine == 0)
+            if (car.Fine == 0 || !(car.AccountBalance<=0))
             {
                 _cars.Remove(car);
                 FreeSpace += 1;
             }
             else
             {
-                throw new Exception("Fine is imposed on your car. Put money on car`s account");
+                throw new FormatException("Fine is imposed on your car. Put money on car`s account");
             }
         }
 

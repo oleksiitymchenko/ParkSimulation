@@ -69,7 +69,6 @@ namespace ParkSimulation
             {
                 case "1":
                 {
-                    Console.Clear();
                     Console.WriteLine("Already staying cars");
                     ShowStayCars(Parking.Instance.Cars);
                     Console.WriteLine("----------------------------------");
@@ -118,7 +117,6 @@ namespace ParkSimulation
                 }
                 case "2":
                 {
-                    Console.Clear();
                     Console.WriteLine("Already staying cars");
                     ShowStayCars(Parking.Instance.Cars);
                     Console.WriteLine("----------------------------------");
@@ -139,23 +137,27 @@ namespace ParkSimulation
 
                     try
                     {
-                        Car RemovedCar = Parking.Instance.Cars[index];
-                        Parking.Instance.RemoveCar(RemovedCar);
+                        Car removedCar = Parking.Instance.Cars[index];
+                        Parking.Instance.RemoveCar(removedCar);
                     }
-                    catch (IndexOutOfRangeException)
-                    {
-                        Console.WriteLine("Index is out of range");
-                    }
+                    //catch (IndexOutOfRangeException)
+                    //{
+                    //    Console.WriteLine("Index is out of range");
+                    //}
                     catch (ArgumentOutOfRangeException)
                     {
                         Console.WriteLine("Index is out of range");
                     }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Put money on car`s account");
+                    }
+
                         Console.ReadLine();
                         goto Start;
                     }
                 case "3":
                 {
-                    Console.Clear();
                     Console.WriteLine("Already staying cars");
                     ShowStayCars(Parking.Instance.Cars);
                     if (Parking.Instance.Cars.Count==0)
@@ -212,14 +214,14 @@ namespace ParkSimulation
                     Console.WriteLine("There are some free space on parking");
                     Console.WriteLine($"{Parking.Instance.FreeSpace} free spots.");
                     Console.ReadLine();
-                    break;
+                    goto Start;
                 }
                 case "5":
                 {
                     Console.WriteLine("Parking is making money");
                     Console.WriteLine($"Current sum is {Parking.Instance.Balance}");
                     Console.ReadLine();
-                    break;
+                    goto Start;
                 }
                 case "6":
                 {
@@ -231,7 +233,7 @@ namespace ParkSimulation
                     }
                     Console.WriteLine();
                     Console.ReadLine();
-                    break;
+                    goto Start;
                 }
                 case "7":
                 {
@@ -239,13 +241,10 @@ namespace ParkSimulation
                     Console.WriteLine();
                     Console.WriteLine(Parking.Instance.ShowTransactionLog());
                     Console.ReadLine();
-                    break;
+                    goto Start;
                 }
                 default: goto Start;
             }
-            
-
-
         }
 
         private static void ShowStayCars(List<Car> cars)
